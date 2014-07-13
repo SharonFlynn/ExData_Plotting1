@@ -1,14 +1,23 @@
-power  <- household_power_consumption
-head(power)
-power$Global_active_power =as.numeric(power$Global_active_power)
+power  <- read.csv("/Users/rain/Desktop/Class Project 1/household_power_consumption.txt", header =TRUE, sep = ";", na.strings="?" )
+power[power =="?"]=NA
+##Fix the Dates and times
 datetime <- paste(power$Date,power$Time)
 new  <- strptime(datetime,"%d/%m/%Y %H:%M:%S")
 power$newdatetime  <- new
-names(power)
+newdate  <-  as.Date(power$Date, "%d/%m/%Y")
+power$newdate  <- newdate
+str(power)
 ## create dataset with just Feb 1st and Feb 2nd 2007
 powerfeb  <- subset (power, Date =="1/2/2007" | Date =="2/2/2007")
-power$Global_active_power =as.numeric(power$Global_active_power)
+## Convert from Factor to Numeric
+powerfeb$Global_active_power =as.numeric(powerfeb$Global_active_power)
+powerfeb$Global_reactive_power =as.numeric(powerfeb$Global_reactive_power)
+powerfeb$Voltage  =as.numeric(powerfeb$Voltage )
+powerfeb$Global_intensity   =as.numeric(powerfeb$ Global_intensity)
+powerfeb$Sub_metering_1 =as.numeric(powerfeb$Sub_metering_1)
+powerfeb$Sub_metering_2 =as.numeric(powerfeb$Sub_metering_2)
 require(ggplot2)
+##Create Plot
 plot (x= powerfeb$newdatetime,y= powerfeb$Global_active_power/500,type ="l", 
                 xlab="",
              ylab = "Global Active Power (kilowats)")
